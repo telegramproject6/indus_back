@@ -14,7 +14,7 @@ router = APIRouter(
 @router.post('/gamer')
 async def get_or_add_gamer(gamer_id: GamerSchemaIn):
 
-    result = GamerService.get_or_add_gamer(gamer_id)
+    result = await GamerService.get_or_add_gamer(gamer_id)
 
     return result
 
@@ -23,6 +23,6 @@ async def get_or_add_gamer(gamer_id: GamerSchemaIn):
 @router.post('/update_gamer')
 async def update_gamer(gamer_id: UpdateGamerSchemaIn):
 
-    result = GamerService.update_gamer(gamer_id)
+    result = await GamerService.update_gamer(gamer_id)
 
     return result
