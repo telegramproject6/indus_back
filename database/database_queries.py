@@ -2,7 +2,7 @@ from sqlalchemy import select, update, func, insert
 from fastapi import HTTPException
 from typing import Optional
 
-from database.create_db import new_session_mydatabase2, MyDB2, new_session_tasks, TasksDB2Taskdone
+from database.create_db import new_session_mydatabase2, MyDB2, new_session_tasks, TasksDB2Taskdone, GameDB2
 from schemas.schemas_in import (AadUserSchemaIn, UpdateUserSchemaIn, MarkTaskDoneIn, IncreaseTotalgotSchemaIn,
                                 GamerSchemaIn, UpdateGamerSchemaIn)
 
@@ -289,15 +289,15 @@ class GamerService:
         async with new_session_tasks() as session:
             # Проверяем, существует ли игрок
             result = await session.execute(
-                select(TasksDB2Taskdone).where(TasksDB2Taskdone.userid == str(gamer_id))
+                select(GameDB2).where(GameDB2.userid == str(gamer_id))
             )
-            row: Optional[TasksDB2Taskdone] = result.scalar_one_or_none()
+            row: Optional[GameDB2] = result.scalar_one_or_none()
 
             if row:
                 return {"data": {c.name: getattr(row, c.name) for c in row.__table__.columns}}
 
             # Если не существует — создаем
-            stmt = insert(TasksDB2Taskdone).values(
+            stmt = insert(GameDB2).values(
                 userid=str(gamer_id),
                 hookspeed=1,
                 multiplier=1,
@@ -311,9 +311,9 @@ class GamerService:
 
             # Получаем созданную запись
             result = await session.execute(
-                select(TasksDB2Taskdone).where(TasksDB2Taskdone.userid == str(gamer_id))
+                select(GameDB2).where(GameDB2.userid == str(gamer_id))
             )
-            new_row: TasksDB2Taskdone = result.scalar_one_or_none()
+            new_row: GameDB2 = result.scalar_one_or_none()
 
             if not new_row:
                 raise HTTPException(
@@ -337,9 +337,9 @@ class GamerService:
         async with new_session_tasks() as session:
             # Проверяем, существует ли такой игрок
             result = await session.execute(
-                select(TasksDB2Taskdone).where(TasksDB2Taskdone.userid == str(gamer_id))
+                select(GameDB2).where(GameDB2.userid == str(gamer_id))
             )
-            row: Optional[TasksDB2Taskdone] = result.scalar_one_or_none()
+            row: Optional[GameDB2] = result.scalar_one_or_none()
 
             if not row:
                 raise HTTPException(
@@ -349,8 +349,8 @@ class GamerService:
 
             # Обновляем только переданные поля
             stmt = (
-                update(TasksDB2Taskdone)
-                .where(TasksDB2Taskdone.userid == str(gamer_id))
+                update(GameDB2)
+                .where(GameDB2.userid == str(gamer_id))
                 .values(**data)
             )
             await session.execute(stmt)
