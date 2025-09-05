@@ -31,6 +31,7 @@ entries = [  # (id, unix_time)
 entries.sort(key=lambda x: x[0])
 
 def predict_creation_date(user_id: int) -> datetime:
+    print(user_id)
     if user_id <= entries[0][0]:
         return datetime.fromtimestamp(entries[0][1])
     for i in range(1, len(entries)):
