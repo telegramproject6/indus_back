@@ -2,7 +2,7 @@ from sqlalchemy import select, update, func, insert
 from fastapi import HTTPException
 from typing import Optional
 
-from database.create_db import new_session_mydatabase2, MyDB2, new_session_tasks, TasksDB2Taskdone, GameDB2
+from database.create_db import new_session_mydatabase2, MyDB2, new_session_tasks, TasksDB2Taskdone, new_session_game, GameDB2
 from schemas.schemas_in import (AadUserSchemaIn, UpdateUserSchemaIn, MarkTaskDoneIn, IncreaseTotalgotSchemaIn,
                                 GamerSchemaIn, UpdateGamerSchemaIn)
 
@@ -286,7 +286,7 @@ class GamerService:
                 detail={"error": "GamerId is required"}
             )
 
-        async with new_session_tasks() as session:
+        async with new_session_game() as session:
             # Проверяем, существует ли игрок
             result = await session.execute(
                 select(GameDB2).where(GameDB2.userid == str(gamer_id))
@@ -334,7 +334,7 @@ class GamerService:
                 detail={"error": "GamerId and at least one field are required"}
             )
 
-        async with new_session_tasks() as session:
+        async with new_session_game() as session:
             # Проверяем, существует ли такой игрок
             result = await session.execute(
                 select(GameDB2).where(GameDB2.userid == str(gamer_id))
