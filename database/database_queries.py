@@ -298,7 +298,7 @@ class GamerService:
 
             # Если не существует — создаем
             stmt = insert(TasksDB2Taskdone).values(
-                UserId=str(gamer_id),
+                userid=str(gamer_id),
                 hookspeed=1,
                 multiplier=1,
                 hookspeedtime=0,
